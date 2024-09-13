@@ -24,7 +24,7 @@ public class ReferralCodeController {
     @GetMapping("/get-referral-code")
     public ResponseEntity<?> getRefferralCode() {
         try {
-            return ResponseEntity.ok(consumerService.getMessageFromQueue());
+            return ResponseEntity.ok(consumerService.getMessage());
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return ResponseEntity.ok("error");

@@ -1,6 +1,7 @@
 package com.refcode;
 
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,9 @@ public class ReferralCodeProducer {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                rabbitTemplate.send(referralCodeQueue.getName(), new Message(line.getBytes()));
+                MessageProperties mprt = new MessageProperties();
+                mprt.setDeliveryMode(MessageProperties.DEFAULT_DELIVERY_MODE.PERSISTENT);
+                rabbitTemplate.send(referralCodeQueue.getName(), new Message(line.getBytes(), mprt));
                 maxLine--;
                 if (maxLine == 0) break;
             }
